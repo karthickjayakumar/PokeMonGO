@@ -1,0 +1,5 @@
+<apex:page >
+    
+    <apex:image url="{!URLFOR($Resource.PMImages,
+                  'images/2.png')}" width="50" height="50"/>
+</apex:page>

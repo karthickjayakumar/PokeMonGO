@@ -1,0 +1,79 @@
+<aura:component implements="force:hasRecordId,force:lightningQuickAction,force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes,lightning:actionOverride" access="global" controller="LCC_GetPokemonDetails">	
+    
+    <aura:attribute name="response" type="Map"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="ListOfpokes" type="String[]"/>
+    <aura:attribute name="pokemanObj" type="object[]"/>
+    <!-- search -->
+    <aura:attribute name="searchKeyword" type="string"/>
+    <aura:attribute name="prevsearchKeyword" type="string"/>
+    <aura:attribute name="filterOneOptions" type="object[]"/>
+    
+    <!--Attributes for Pagination -->
+    <aura:attribute name="page" type="integer" description="using for store page Number of each page which contains list of items"/>
+    <aura:attribute name="pages" type="integer" description="using for storing the total number of pages the list is split into"/>
+    <aura:attribute name="pageListSize" type="Integer" description="integer to set the items displayed per page base don selection"/> 
+    <aura:attribute name="paginationList" type="Object[]" description="final list of paginated items to be displayed to user"/>
+    <aura:attribute name="pageSize" type="Integer" default="20" description="default size of the items displaye don the page"/>
+    <aura:attribute name="totalSize" type="Integer" description="total size of the results returned"/>
+    <aura:attribute name="start" type="Integer" />
+    <aura:attribute name="end" type="Integer"/>
+    
+    <div>
+        
+      
+        <img src="{!$Resource.PMImages + '/images/hero-background.jpg'}" style = "Width: 100%"/>
+
+        <lightning:layout multipleRows="true" verticalAlign="center" >
+            <lightning:layoutItem size="12" largeDeviceSize="6" mediumDeviceSize="12" smallDeviceSize="12" padding="around-small" class="searchClass">
+                <lightning:input type="search" label="" name="search" placeholder="Search" value="{!v.searchKeyword}" onchange="{!c.filterBySearchKeyword}"/>
+            </lightning:layoutItem>
+        </lightning:layout>
+        <aura:if isTrue="{!v.paginationList.length > 0}">
+            <lightning:layout  multipleRows="true" >
+                
+                <aura:iteration items="{!v.paginationList}" var="rateLst" indexVar="indx">
+                    <lightning:layoutItem size="12" largeDeviceSize="3" mediumDeviceSize="6" smallDeviceSize="12" padding="around-medium">
+                        <div>
+                            #{!rateLst.count} &nbsp;
+                            {!rateLst.name}
+                        </div>
+                        <img src="{!$Resource.PMImages + rateLst.url}"/>
+                    </lightning:layoutItem>
+                </aura:iteration> 
+                
+            </lightning:layout>
+            <aura:set attribute="else">
+                no results found
+            </aura:set>
+        </aura:if>        
+    </div> 
+    <div aura:id="product-pagination-id" class="pagePadding">
+        <lightning:layout multipleRows="true" verticalAlign="center">
+            <div class=" slds-size--12-of-12 slds-small-size--12-of-12 slds-medium-size--6-of-12 slds-large-size--3-of-12" style="padding-bottom: 51px; white-space: nowrap; padding-left: 12px;">
+                <lightning:layoutItem size="12" largeDeviceSize="4" mediumDeviceSize="6" smallDeviceSize="12">
+                    <span style="align:left;float:left;font-size:14px;color:#848484;">
+                        <aura:if isTrue="{!v.totalSize gt 0}">
+                            <center>
+                                <span class="tablePadding">&#160;Showing {!v.page} / {!v.pages}&#160; of &#160;{!v.totalSize}  &#160; pokemons </span>
+                            </center>
+                            <aura:set attribute="else">
+                                <span style="text-align:left;">  no records</span>                    
+                            </aura:set>                                                        
+                        </aura:if>                                
+                    </span>                 
+                </lightning:layoutItem>
+            </div>
+           
+            <lightning:layoutItem size="12" largeDeviceSize="4" mediumDeviceSize="6" smallDeviceSize="12">
+                <span>
+                        <lightning:buttonIcon aura:id="prev-id" iconName="utility:left" variant="bare"  onclick="{!c.previous}" alternativeText="previous"/>
+                        <lightning:buttonIcon aura:id="next-id" iconName="utility:right" variant="bare" onclick="{!c.next}" alternativeText="next" />
+                        
+                                                     
+                </span> 
+            </lightning:layoutItem> 
+        </lightning:layout>
+    </div>
+    
+</aura:component>
